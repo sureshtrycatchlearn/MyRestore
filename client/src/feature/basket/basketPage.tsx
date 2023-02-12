@@ -7,7 +7,6 @@ import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 import BasketSummary from "./basketSummary";
 
 export default function basketPage() {
-debugger;
 const{basket, status} = useAppSelector(state=>state.basket);
 const dispatch = useAppDispatch();
 
@@ -49,7 +48,7 @@ if(!basket) return <Typography variant="h3">Your Basket is Empty</Typography>
                 </LoadingButton>
                   {item.quantity}
                 <LoadingButton 
-                  loading = {status === 'pendingAddItmes' + item.productId} 
+                  loading = {status === 'pendingAddItem' + item.productId} 
                     onClick={() => dispatch(addBasketItemAsync({productId:item.productId}))} color="secondary">
                     <Add/>
                 </LoadingButton>

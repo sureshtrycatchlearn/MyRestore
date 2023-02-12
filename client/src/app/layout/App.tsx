@@ -19,10 +19,6 @@ import CheckoutPage from "../../feature/checkout/CheckoutPage";
 import { useDispatch } from "react-redux";
 import { setBasket } from "../../feature/basket/basketSlice";
 
-
-
-
-
 function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);

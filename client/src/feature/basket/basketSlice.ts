@@ -14,22 +14,22 @@ const initialState: BasketState = {
 
 export const addBasketItemAsync = createAsyncThunk<Basket,{productId:number, quantity?:number}>(
     'basket/addBasketItemAsync',
-    async ({productId, quantity=1})=>{
+    async ({productId, quantity=1}, thunkAPI)=>{
         try {
             return await agent.Basket.addItem(productId, quantity)
-        } catch (error) {
-            console.log(error);
+        } catch (error:any) {
+            return thunkAPI.rejectWithValue({error:error.data})
         }
     }
 )
 
 export const removeBasketItemAsync = createAsyncThunk<void,{productId:number, quantity:number, name?:string}>(
     'basket/removeBasketItemAsync',
-    async ({productId, quantity})=>{
+    async ({productId, quantity}, thunkAPI)=>{
         try {
             await agent.Basket.removeItem(productId, quantity)
-        } catch (error) {
-            console.log(error);
+        } catch (error:any) {
+            return thunkAPI.rejectWithValue({error:error.data})
         }
     }
 )
@@ -45,31 +45,31 @@ export const basketSlice = createSlice({
 
     extraReducers:(builder=>{
         builder.addCase(addBasketItemAsync.pending,(state, action)=>{
-            console.log(action);
             state.status = 'pendingAddItem' + action.meta.arg.productId;
         });
         builder.addCase(addBasketItemAsync.fulfilled,(state, action)=>{
             state.basket=action.payload;
-            state.status = 'Idle'
+            state.status = 'Idle';
         });
-        builder.addCase(addBasketItemAsync.rejected,(state)=>{
-            state.status = 'Idle'
+        builder.addCase(addBasketItemAsync.rejected,(state, action)=>{
+            state.status = 'Idle';
+            console.log(action);
         });
         builder.addCase(removeBasketItemAsync.pending,(state, action)=>{
-            console.log(action);
             state.status = 'pendingRemoveItem' + action.meta.arg.productId + action.meta.arg.name;
         });
         builder.addCase(removeBasketItemAsync.fulfilled,(state, action)=>{
             const {productId, quantity}=action.meta.arg;
-            const itemIndex = state.basket?.items.findIndex(i=>i.productId);
+            const itemIndex = state.basket?.items.findIndex(i=>i.productId==productId);
             if(itemIndex===-1 || itemIndex===undefined) return;
             state.basket!.items[itemIndex].quantity -=quantity;
             if(state.basket?.items[itemIndex].quantity===0)
                 state.basket.items.splice(itemIndex,1);
-            state.status='Idle'
+            state.status='Idle';
         });
-        builder.addCase(removeBasketItemAsync.rejected,(state)=>{
-            state.status = 'Idle'
+        builder.addCase(removeBasketItemAsync.rejected,(state, action)=>{
+            state.status = 'Idle';
+            console.log(action);
         });
     })
 })
