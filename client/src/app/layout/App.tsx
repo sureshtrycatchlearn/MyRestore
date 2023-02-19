@@ -18,6 +18,7 @@ import LoadingComponent from "./LoadingComponent";
 import CheckoutPage from "../../feature/checkout/CheckoutPage";
 import { useDispatch } from "react-redux";
 import { setBasket } from "../../feature/basket/basketSlice";
+import { Outlet } from "@mui/icons-material";
 
 function App() {
   const dispatch = useDispatch();
