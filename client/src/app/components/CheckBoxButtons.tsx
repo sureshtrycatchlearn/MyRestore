@@ -15,7 +15,7 @@ export default function CheckboxButton({items,checked,onChange}:props) {
         const currentIndex =checkedItems.findIndex(item => item === value)
         let newChecked:string[]=[];
         if(currentIndex === - 1) newChecked = [...checkedItems, value];
-        else newChecked = checkedItems.filter(item=>item != value);
+        else newChecked = checkedItems.filter(item=>item !== value);
         setCheckedItem(newChecked);
         onChange(newChecked);
     }

@@ -1,41 +1,31 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import AboutPage from "../../feature/about/AboutPage";
-import Catalog from "../../feature/catalog/Catalog";
-import ProductDetails from "../../feature/catalog/ProductDetails";
-import ContactPage from "../../feature/contact/ContactPage";
-import HomePage from "../../feature/home/HomePage";
 import Header from "./Header";
 import 'react-toastify/dist/ReactToastify.css'
-import serverError from "../errors/serverError";
-import NotFound from "../errors/NotFound";
-import basketPage from "../../feature/basket/basketPage";
-import { getCookie } from "../util/util";
-import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
-import CheckoutPage from "../../feature/checkout/CheckoutPage";
-import { useDispatch } from "react-redux";
-import { setBasket } from "../../feature/basket/basketSlice";
-import { Outlet } from "@mui/icons-material";
+import { fetchBaskeAsync } from "../../feature/basket/basketSlice";
+import { Outlet } from "react-router-dom";
+import { fetchCurrentUser } from "../../feature/Account/accountSlice";
+import { useAppDispatch } from "../store/configureStore";
+
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=> {
-    const buyerId = getCookie('buyerId')
-    if(buyerId) {
-      agent.Basket.get()
-      .then(basket => dispatch(setBasket(basket)))
-      .catch(error => console.log(error))
-      .finally(() => setLoading(false));
-    } else 
-    {
-      setLoading(false);
+ const initApp = useCallback(async ()=> {
+    try {
+      await dispatch(fetchCurrentUser());
+      await dispatch(fetchBaskeAsync());
+    } catch (error) {
+      console.log(error);
     }
-  }, [dispatch])
+  },[dispatch])
+
+  useEffect(()=> {
+    initApp().then(()=>setLoading(false))
+  }, [initApp])
 
 const [darkMode, setDarkMode]=useState(false);
 const paletteType = darkMode? 'dark':'light'
@@ -48,32 +38,21 @@ const paletteType = darkMode? 'dark':'light'
     }
   })
 
-function handeleThemeChange(){
+function handleThemeChange(){
   setDarkMode(!darkMode);
 }
 
-if(loading) return  <LoadingComponent message="Initializing app....."></LoadingComponent>
+if(loading) return  <LoadingComponent message="Initializing app....."/>
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer position='bottom-right' hideProgressBar />
-      <CssBaseline/>
-      <Header darkMode={darkMode} handeleThemeChange={handeleThemeChange}/>
-      <Container>
-        <Switch>
-        <Route exact path='/' component={HomePage}/>
-        <Route exact path='/catalog' component={Catalog}/>
-        <Route path='/catalog/:id' component={ProductDetails}/>
-        <Route path='/about' component={AboutPage}/>
-        <Route path='/contact' component={ContactPage}/>
-        <Route path='/server-error' component={serverError}/>
-        <Route path='/basket' component={basketPage}/>
-        <Route path='/checkout' component={CheckoutPage}/>
-        <Route component={NotFound}/>
-        </Switch>
-      </Container>
+    <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+    <CssBaseline />
+    <Header darkMode={darkMode} handeleThemeChange={handleThemeChange} />
+`    <Container>
+      <Outlet/>
+    </Container>`
     </ThemeProvider>
-  );
-}
-
-export default App;
+      );
+  }
+  export default App;
 

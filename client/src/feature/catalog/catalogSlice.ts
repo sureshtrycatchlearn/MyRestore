@@ -104,36 +104,36 @@ export const catalogSlice = createSlice({
     extraReducers: (builder=>{
         builder.addCase(fetchProductsAsync.pending, (state)=>{
             state.status='pendingFetchProducts';
-        }),
+        });
         builder.addCase(fetchProductsAsync.fulfilled, (state,action)=>{
             productsAdaptor.setAll(state, action.payload);
             state.status='idle';
             state.productsLoaded=true;
-        }),
+        });
         builder.addCase(fetchProductsAsync.rejected, (state,action)=>{
             console.log(action);
             state.status='idle';
-        }),
+        });
         builder.addCase(fetchProductAsync.pending, (state)=>{
             state.status='pendingFetchProduct';
-        }),
+        });
         builder.addCase(fetchProductAsync.fulfilled, (state,action)=>{
             productsAdaptor.upsertOne(state, action.payload)
             state.status='idle';
-        }),
+        });
         builder.addCase(fetchProductAsync.rejected, (state, action)=>{
             console.log(action);
             state.status='idle';
-        }),
+        });
         builder.addCase(fetchFilters.pending, (state)=>{
             state.status='pendingFetchFilters';
-        }),
+        });
         builder.addCase(fetchFilters.fulfilled, (state,action)=>{
             state.brands=action.payload.brands;
             state.types=action.payload.types;
             state.filtersLoaded=true;
             state.status='idle';
-        }),
+        });
         builder.addCase(fetchFilters.rejected, (state, action)=>{
             state.status='idle';
             console.log(action.payload);
