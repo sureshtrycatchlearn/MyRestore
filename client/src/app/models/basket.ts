@@ -4,7 +4,7 @@
         productId: number;
         name: string;
         price: number;
-        pictureUrl: string;
+        pitureUrl: string;
         brand: string;
         type: string;
         quantity: number;
