@@ -26,7 +26,7 @@ namespace API.Extensions
                     {
                         ProductId = item.ItemOrdered.ProductId,
                         Name = item.ItemOrdered.Name,
-                        PitureUrl= item.ItemOrdered.PictureUrl,
+                        PictureUrl= item.ItemOrdered.PictureUrl,
                         Price = item.Price,
                         Quantity=item.Quantity
                     }).ToList()
