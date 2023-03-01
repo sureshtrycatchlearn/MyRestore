@@ -48,6 +48,7 @@ if(loading) return  <LoadingComponent message="Initializing app....."/>
     <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
     <CssBaseline />
     <Header darkMode={darkMode} handeleThemeChange={handleThemeChange} />
+    
 `    <Container>
       <Outlet/>
     </Container>`

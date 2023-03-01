@@ -43,7 +43,7 @@ namespace API.Controllers
         public async Task<ActionResult<Order>> CrateOrder(CreateOrderDto orderDto)
         {
             var basket = await _context.Baskets
-                         .RetriveBasketWithItems(User.Identity.Name)
+                         .RetrieveBasketWithItems(User.Identity.Name)
                          .FirstOrDefaultAsync();
             if(basket==null) return BadRequest (new ProblemDetails{Title="Could not locate the basket"});
 
@@ -77,7 +77,9 @@ namespace API.Controllers
                 BuyerId=User.Identity.Name,
                 shippingAddress=orderDto.shippingAddress,
                 SubTotal = subTotal,
-                DeliveryFee = deliveryFee
+                DeliveryFee = deliveryFee,
+                PaymentIntentId = basket.PaymentIntentId
+
             };
 
             _context.Orders.Add(order);
