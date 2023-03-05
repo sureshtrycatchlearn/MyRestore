@@ -35,22 +35,17 @@ axios.interceptors.response.use(async response=>{
                 for(const key in data.errors)
                 {
                     if(data.errors[key]) {
-                        console.log("suresh6");
                         modelStateErrors.push(data.errors[key])
                     }
                 }
-                console.log("suresh5");
                 throw modelStateErrors.flat();
             }
-            console.log("suresh0");
             toast.error(data.title);
             break;
         case 401:
-            console.log("suresh1");
             toast.error(data.title);
             break;
         case 404:
-            console.log("suresh2");
             toast.error(data.title);
             break;
         case 500:

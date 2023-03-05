@@ -5,12 +5,14 @@ import Header from "./Header";
 import 'react-toastify/dist/ReactToastify.css'
 import LoadingComponent from "./LoadingComponent";
 import { fetchBaskeAsync } from "../../feature/basket/basketSlice";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { fetchCurrentUser } from "../../feature/Account/accountSlice";
 import { useAppDispatch } from "../store/configureStore";
+import HomePage from "../../feature/home/HomePage";
 
 
 function App() {
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -42,16 +44,19 @@ function handleThemeChange(){
   setDarkMode(!darkMode);
 }
 
-if(loading) return  <LoadingComponent message="Initializing app....."/>
+
   return (
     <ThemeProvider theme={theme}>
-    <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
-    <CssBaseline />
-    <Header darkMode={darkMode} handeleThemeChange={handleThemeChange} />
-    
-`    <Container>
-      <Outlet/>
-    </Container>`
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+      <CssBaseline />
+      <Header darkMode={darkMode} handeleThemeChange={handleThemeChange} />
+      {
+        loading ? <LoadingComponent message="Initializing app....." />
+            : location.pathname === '/' ? <HomePage />
+            : <Container sx={{mt: 4}}> 
+                <Outlet />  
+              </Container>
+      }
     </ThemeProvider>
       );
   }
